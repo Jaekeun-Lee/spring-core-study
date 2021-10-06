@@ -1,5 +1,7 @@
 package study.core;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import study.core.member.Grade;
 import study.core.member.Member;
 import study.core.member.MemberService;
@@ -10,17 +12,19 @@ public class OrderApp {
 
     public static void main(String[] args) {
 
-        AppConfig appConfig = new AppConfig();
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
 
-        MemberService memberService = appConfig.memberService();
-        OrderService orderService = appConfig.orderService();
+        MemberService memberService = applicationContext.getBean("memberService", MemberService.class);
+        OrderService orderService = applicationContext.getBean("orderService", OrderService.class);
 
-        Long memberId = 1L;
-        Member member = new Member(1L, "memberA", Grade.VIP);
+        long memberId = 1L;
+        Member member = new Member(memberId, "memberA", Grade.VIP);
+
         memberService.join(member);
 
         Order order = orderService.createOrder(memberId, "itemA", 10000);
 
-        System.out.println(order);
+        System.out.println("order = " + order);
+
     }
 }
